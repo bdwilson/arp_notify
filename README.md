@@ -1,5 +1,7 @@
 # arp_notify
-A network device monitor Vyatta/EdgeMax routers
+A network device monitor Vyatta/EdgeMax routers to notify you if new devices
+join your network(s). Helpful if you frequently add things to your network and
+need to know what was added without looking in dnsmasq log. 
 
 # Installation
 <code>$ sudo su -; mkdir -p /config/arp_notify; cd /config/arp_notify</code><br>
