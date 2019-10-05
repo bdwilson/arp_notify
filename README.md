@@ -11,10 +11,10 @@ Edit variables in arp_notify.sh to reflect your pushover user name and app you
 created. 
 
 <code># crontab -e</code><br>
-<code>
+<pre>
 23 11 * * * /config/arp_notify/backup.sh
 \*/5 * * * * /config/arp_notify/arp_notify.sh
-</code>
+</pre>
 
 # Info
 Q: Why are you storing things in /var/log?<br>
