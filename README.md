@@ -13,7 +13,7 @@ created.
 <code># crontab -e</code><br>
 <pre>
 23 11 * * * /config/arp_notify/backup.sh
-\*/5 * * * * /config/arp_notify/arp_notify.sh
+*/5 * * * * /config/arp_notify/arp_notify.sh
 </pre>
 
 # Info
