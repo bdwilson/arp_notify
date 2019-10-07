@@ -28,7 +28,7 @@ Q: What do I need to do after a router firmware upgrade?<br>
 A: Assuming you have the same config, you'll likely only need to restore the crontab entries above.
 
 Q: What if I have devices which I trust and never want to be notified about them?<br>
-A: Create a file caŀled .arpignore and put the MAC address (or the full entry
+A: Create a file called .arpignore and put the MAC address (or the full entry
 from .arptable file) into this file. Theoretically, you could copy .arptable to
 .arpignore and ignore all devices from the getgo, then only be notified about
 new things.
