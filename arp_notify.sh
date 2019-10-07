@@ -2,6 +2,9 @@
 #
 # Stores data in memory but writes it to flash daily via backup script
 #
+# If there are "trusted" devices you wish to ignore, put the MAC address, or
+# their whole ARP table entry into a file called .arpignore
+#
 # To install: 
 # mkdir -p /config/arp_notify
 # cp backup.sh arp_notify.sh /config/arp_notify
@@ -26,23 +29,41 @@ if [ ! -f $dir/.arptable ]
 then
     touch $dir/.arptable
 fi
-$arpcommand > $dir/.arptablenew
+$arpcommand | grep -v 'incomplete' > $dir/.arptablenew
 touch $dir/.arplist
 echo "New ARP Entries" > $dir/.arplist
 for newarp in $(diff $dir/.arptable $dir/.arptablenew | grep + | grep ether | sed 's/^+//g' | awk '{print $1}')
 do
-    new_entry="$newarp - $(/opt/vyatta/bin/vyatta-op-cmd-wrapper show dhcp leases | grep "$newarp" | awk '{print $6}')"
-    logger -t [arp_notify] "New Device Detected -> $new_entry"
-    echo $new_entry >> $dir/.arplist
+    if [ -f $dir/.arpignore ]
+    then
+    	if [[ $(grep -L "$newarp" $dir/.arpignore) ]]; then
+		new_entry="$newarp - $(/opt/vyatta/bin/vyatta-op-cmd-wrapper show dhcp leases | grep "$newarp" | awk '{print $6}')"
+    		logger -t [arp_notify] "New Device Detected -> $new_entry"
+    		echo $new_entry >> $dir/.arplist
+    	fi
+    else
+	new_entry="$newarp - $(/opt/vyatta/bin/vyatta-op-cmd-wrapper show dhcp leases | grep "$newarp" | awk '{print $6}')"
+    	logger -t [arp_notify] "New Device Detected -> $new_entry"
+    	echo $new_entry >> $dir/.arplist
+    fi
 done
 
 echo "" >> $dir/.arplist
 echo "Removed ARP Entries" >> $dir/.arplist
 for noarp in $(diff $dir/.arptable $dir/.arptablenew | grep - | grep ether | sed 's/^-//g' | awk '{print $1}')
 do
-    lost_entry="$noarp - $(/opt/vyatta/bin/vyatta-op-cmd-wrapper show dhcp leases | grep "$noarp" | awk '{print $6}')"
-    logger -t [arp_notify] "ARP Entry Removed -> $lost_entry"
-    echo $new_entry >> $dir/.arplist
+    if [ -f $dir/.arpignore ]
+    then
+    	if [[ $(grep -L "$newarp" $dir/.arpignore) ]]; then
+    		lost_entry="$noarp - $(/opt/vyatta/bin/vyatta-op-cmd-wrapper show dhcp leases | grep "$noarp" | awk '{print $6}')"
+    		logger -t [arp_notify] "ARP Entry Removed -> $lost_entry"
+    		echo $lost_entry >> $dir/.arplist
+    	fi
+    else
+    	lost_entry="$noarp - $(/opt/vyatta/bin/vyatta-op-cmd-wrapper show dhcp leases | grep "$noarp" | awk '{print $6}')"
+    	logger -t [arp_notify] "ARP Entry Removed -> $lost_entry"
+    	echo $lost_entry >> $dir/.arplist
+    fi
 done
 
 message=$(cat $dir/.arplist)

@@ -3,6 +3,8 @@ A network device monitor Vyatta/EdgeMax routers to notify you if new devices
 join your network(s). Helpful if you frequently add things to your network and
 need to know what was added without looking in dnsmasq log. 
 
+Optional .arpignore file will not notify you about MAC addresses you "trust". 
+
 # Installation
 <code>$ sudo su -; mkdir -p /config/arp_notify; cd /config/arp_notify</code><br>
 <code># curl https://raw.githubusercontent.com/bdwilson/arp_notify/master/arp_notify.sh > arp_notify.sh</code><br>
@@ -24,3 +26,9 @@ A: Because /var/log is stored in RAM vs. writing to SD every 5 minutes. Data is 
 
 Q: What do I need to do after a router firmware upgrade?<br>
 A: Assuming you have the same config, you'll likely only need to restore the crontab entries above.
+
+Q: What if I have devices which I trust and never want to be notified about them?<br>
+A: Create a file caŀled .arpignore and put the MAC address (or the full entry
+from .arptable file) into this file. Theoretically, you could copy .arptable to
+.arpignore and ignore all devices from the getgo, then only be notified about
+new things.
