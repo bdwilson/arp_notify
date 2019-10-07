@@ -6,7 +6,7 @@ need to know what was added without looking in dnsmasq log.
 Optional .arpignore file will not notify you about MAC addresses you "trust". 
 
 # Installation
-<code>$ ssh admin@10.0.0.1</code> (or whatever your router IP is)
+<code>$ ssh admin@10.0.0.1</code> (or whatever your router IP is)<br>
 <code>$ sudo su -; mkdir -p /config/arp_notify; cd /config/arp_notify</code><br>
 <code># curl https://raw.githubusercontent.com/bdwilson/arp_notify/master/arp_notify.sh > arp_notify.sh</code><br>
 <code># curl https://raw.githubusercontent.com/bdwilson/arp_notify/master/backup.sh > backup.sh</code><br>
