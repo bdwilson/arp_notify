@@ -15,8 +15,6 @@
 arpcommand="/opt/vyatta/bin/vyatta-op-cmd-wrapper show arp"
 pushover_user_token="<pushover_user_token>"
 pushover_app_token="<pushover_app_token"
-hostname=`hostname`
-service="ARP Monitor"
 logonly=1  # comment this out to send pushover events.
 dir="/var/log/arp_notify"
 
@@ -54,7 +52,7 @@ for noarp in $(diff $dir/.arptable $dir/.arptablenew | grep - | grep ether | sed
 do
     if [ -f $dir/.arpignore ]
     then
-    	if [[ $(grep -L "$newarp" $dir/.arpignore) ]]; then
+    	if [[ $(grep -L "$noarp" $dir/.arpignore) ]]; then
     		lost_entry="$noarp - $(/opt/vyatta/bin/vyatta-op-cmd-wrapper show dhcp leases | grep "$noarp" | awk '{print $6}')"
     		logger -t [arp_notify] "ARP Entry Removed -> $lost_entry"
     		echo $lost_entry >> $dir/.arplist
@@ -76,7 +74,7 @@ else
         logger -t [arp_notify] "ARP table changes were detected. Sending alert."
 		curl -s --form-string "token=$pushover_app_token" \
 				--form-string "user=$pushover_user_token" \
-				--form-string "message=[$hostname] $service - $message" \
+				--form-string "message=$message" \
 				https://api.pushover.net/1/messages.jsonop
     else
         logger -t [arp_notify] "ARP table changes were detected."
