@@ -8,6 +8,8 @@ Optional .arpignore file will not notify you about MAC addresses you "trust".
 Optional .arpnotify file to trigger webhooks if someone arrives/leaves. This
 comes in handy with Hubitat and a [Virtual Presence
 Sensor](https://github.com/bdwilson/hubitat/blob/master/Geofency-Presence/virtual-mobile-presence.groovy).
+Create virtual presence devices per person and connect it to MakerAPI to use
+with a webhook.
 
 # Installation
 <code>$ ssh admin@10.0.0.1</code> (or whatever your router IP is)<br>
