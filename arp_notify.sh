@@ -45,20 +45,20 @@ echo "New ARP Entries" > $dir/.arplist
 count=1
 for newarp in $(diff $dir/.arptable $dir/.arptablenew | grep + | grep ether | sed 's/^+//g' | awk '{print $1}')
 do
-    if [ count -eq 1 ]
+    if [ $count -eq 1 ]
     then
-	$dhcpleases > $dir/.dhcpleases
- 	count=`expr $count + 1`
+		$dhcpleases > $dir/.dhcpleases
+ 		count=`expr $count + 1`
     fi
 
     if [ -f $dir/.arpnotify ]
     then
-	new_mac=`grep "$newarp" $dir/.dhcpleases |  awk '{print $2}'`
-	for notify in $(grep "$new_mac" $dir/.arpnotify | grep -v "^#" | grep + | awk '{print $3}')
-	do
-		logger -t [arp_notify] "New Device Detected ($new_mac) -> Notifying $notify"
-		curl -s "$notify"
-	done
+		new_mac=`grep "$newarp" $dir/.dhcpleases |  awk '{print $2}'`
+		for notify in $(grep "$new_mac" $dir/.arpnotify | grep -v "^#" | grep + | awk '{print $3}')
+		do
+			logger -t [arp_notify] "New Device Detected ($new_mac) -> Notifying $notify"
+			curl -s "$notify"
+		done
     fi
 
     if [ -f $dir/.arpignore ]
@@ -80,20 +80,20 @@ echo "Removed ARP Entries" >> $dir/.arplist
 count=1
 for noarp in $(diff $dir/.arptable $dir/.arptablenew | grep - | grep ether | sed 's/^-//g' | awk '{print $1}')
 do
-    if [ count -eq 1 ]
+    if [ $count -eq 1 ]
     then
-	$dhcpleases > $dir/.dhcpleases
- 	count=`expr $count + 1`
+		$dhcpleases > $dir/.dhcpleases
+ 		count=`expr $count + 1`
     fi
 
     if [ -f $dir/.arpnotify ]
     then
-	lost_mac=`grep "$noarp" $dir/.dhcpleases | awk '{print $2}'`
-	for notify in $(grep "$lost_mac" $dir/.arpnotify | grep -v "^#" | grep - | awk '{print $3}')
-	do
-		logger -t [arp_notify] "ARP Entry Removed ($lost_mac) -> Notifying $notify"
-		curl -s "$notify"
-	done
+		lost_mac=`grep "$noarp" $dir/.dhcpleases | awk '{print $2}'`
+		for notify in $(grep "$lost_mac" $dir/.arpnotify | grep -v "^#" | grep - | awk '{print $3}')
+		do
+			logger -t [arp_notify] "ARP Entry Removed ($lost_mac) -> Notifying $notify"
+			curl -s "$notify"
+		done
     fi
     if [ -f $dir/.arpignore ]
     then
