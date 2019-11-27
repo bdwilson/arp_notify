@@ -53,7 +53,7 @@ do
 
     if [ -f $dir/.arpnotify ]
     then
-		new_mac=`grep "$newarp" $dir/.dhcpleases |  awk '{print $2}'`
+		new_mac=`grep "^$newarp\s" $dir/.dhcpleases |  awk '{print $2}'`
 		for notify in $(grep "$new_mac" $dir/.arpnotify | grep -v "^#" | grep + | awk '{print $3}')
 		do
 			logger -t [arp_notify] "New Device Detected ($new_mac) -> Notifying $notify"
@@ -64,12 +64,12 @@ do
     if [ -f $dir/.arpignore ]
     then
     	if [[ $(grep -L "$newarp" $dir/.arpignore) ]]; then
-		new_entry="$newarp - $(grep "$newarp" $dir/.dhcpleases | awk '{print $6}')"
+		new_entry="$newarp - $(grep "^$newarp\s" $dir/.dhcpleases | awk '{print $6}')"
     		logger -t [arp_notify] "New Device Detected -> $new_entry"
     		echo $new_entry >> $dir/.arplist
     	fi
     else
-	new_entry="$newarp - $(grep "$newarp" $dir/.dhcpleases | awk '{print $6}')"
+	new_entry="$newarp - $(grep "^$newarp\s" $dir/.dhcpleases | awk '{print $6}')"
     	logger -t [arp_notify] "New Device Detected -> $new_entry"
     	echo $new_entry >> $dir/.arplist
     fi
@@ -88,7 +88,7 @@ do
 
     if [ -f $dir/.arpnotify ]
     then
-		lost_mac=`grep "$noarp" $dir/.dhcpleases | awk '{print $2}'`
+		lost_mac=`grep "^$noarp\s" $dir/.dhcpleases | awk '{print $2}'`
 		for notify in $(grep "$lost_mac" $dir/.arpnotify | grep -v "^#" | grep - | awk '{print $3}')
 		do
 			logger -t [arp_notify] "ARP Entry Removed ($lost_mac) -> Notifying $notify"
@@ -98,12 +98,12 @@ do
     if [ -f $dir/.arpignore ]
     then
     	if [[ $(grep -L "$noarp" $dir/.arpignore) ]]; then
-    		lost_entry="$noarp - $(grep "$noarp" $dir/.dhcpleases | awk '{print $6}')"
+    		lost_entry="$noarp - $(grep "^$noarp\s" $dir/.dhcpleases | awk '{print $6}')"
     		logger -t [arp_notify] "ARP Entry Removed -> $lost_entry"
     		echo $lost_entry >> $dir/.arplist
     	fi
     else
-    	lost_entry="$noarp - $(grep "$noarp" $dir/.dhcpleases | awk '{print $6}')"
+    	lost_entry="$noarp - $(grep "^$noarp\s" $dir/.dhcpleases | awk '{print $6}')"
     	logger -t [arp_notify] "ARP Entry Removed -> $lost_entry"
     	echo $lost_entry >> $dir/.arplist
     fi
