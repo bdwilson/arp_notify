@@ -13,7 +13,8 @@ with a webhook.
 
 # Installation
 <code>$ ssh admin@10.0.0.1</code> (or whatever your router IP is)<br>
-<code>$ sudo su -; mkdir -p /config/arp_notify; cd /config/arp_notify</code><br>
+<code>$ sudo su -</code><br>
+<code># mkdir -p /config/arp_notify; cd /config/arp_notify</code><br>
 <code># curl https://raw.githubusercontent.com/bdwilson/arp_notify/master/arp_notify.sh > arp_notify.sh</code><br>
 <code># curl https://raw.githubusercontent.com/bdwilson/arp_notify/master/backup.sh > backup.sh</code><br>
 <code># chmod 755 \*.sh</code><br>
